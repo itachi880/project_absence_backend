@@ -1,0 +1,40 @@
+{
+  "students/gs/fr": {
+    "_id": "ObjectId",
+    "first_name": "John",
+    "last_name": "Doe",
+    "justification_days_left": 10,
+    "absences": ["ObjectId"],
+    "role": "student | GS | FR"
+  },
+  "absence": {
+    "_id": "ObjectId",
+    "student_id": "ObjectId",
+    "month": "2024-10",
+    "absences_justifiees": 3,
+    "total_absences": 8,
+    "absences": [
+      {
+        "date": "2024-10-10",
+        "sessions": [1, 3],
+        "justification_id": "ObjectId"
+      },
+      {
+        "date": "2024-10-15",
+        "sessions": [2],
+        "justification_id": null
+      }
+    ]
+  },
+  "certefications": {
+    "_id": " ObjectId",
+    "student_id": " ObjectId",
+    "absence_id": " ObjectId",
+    "justification_date": "2024-10-10",
+    "certificate_type": "medical | permi ",
+    "details": "Details about the justification uploaded_file",
+    "": "path/to/certificate.pdf",
+    "created_at": "date creation de demond",
+    "status": "pending | validated | not validated"
+  }
+}
