@@ -3,6 +3,8 @@
     "_id": "ObjectId",
     "first_name": "John",
     "last_name": "Doe",
+    "login": "string",
+    "password": "string(hashed)",
     "justification_days_left": 10,
     "absences": ["ObjectId"],
     "role": "student | GS | FR"
@@ -33,7 +35,7 @@
     "justification_date": "2024-10-10",
     "certificate_type": "medical | permi ",
     "details": "Details about the justification uploaded_file",
-    "": "path/to/certificate.pdf",
+    "media": "path/to/certificate.pdf",
     "created_at": "date creation de demond",
     "status": "pending | validated | not validated"
   }
