@@ -32,7 +32,7 @@
     "_id": " ObjectId",
     "student_id": " ObjectId",
     "absence_id": " ObjectId",
-    "justification_date": "2024-10-10",
+    "justification_date": "Number(1-31)",
     "certificate_type": "medical | permi ",
     "details": "Details about the justification uploaded_file",
     "media": "path/to/certificate.pdf",
