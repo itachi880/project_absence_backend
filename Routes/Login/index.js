@@ -8,9 +8,9 @@ const router = express.Router();
 router.post("/", async (req, res) => {
   const { password, login } = req.body;
   try {
-    if (!login || !password) return res.statusCode(400).end("incompleate request");
+    if (!login || !password) return res.status(400).end("incompleate request");
     let user = await User.findOne({ login: login, password: HashPass(password), is_deleted: false });
-    if (!user) return res.statusCode(404).end("user not found ");
+    if (!user) return res.status(404).end("user not found ");
     delete user.password;
     res.json({
       token: jwt_generator({ id: user._id, role: user.role }),
@@ -18,7 +18,7 @@ router.post("/", async (req, res) => {
     });
   } catch (e) {
     console.log(e);
-    res.statusCode(500).json(e);
+    res.status(500).json(e);
   }
 });
 module.exports = router;
