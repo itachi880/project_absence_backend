@@ -13,9 +13,11 @@ const jwt_auth = require("jsonwebtoken");
 module.exports.jwt_verify = async function (token) {
   return await new Promise((resolve, reject) => {
     jwt_auth.verify(token, process.env.SALT_JWT, (err, data) => {
-      console.log(process.env.SALT_JWT);
       if (err) return resolve([err, null]);
-      resolve([null, data]);
+      resolve([null, data]);//session est ce expirer ou nom 
     });
   });
+};
+module.exports.jwt_generator=  function ({id,role}){
+  return jwt_auth.sign({id,role},process.env.SALT_JWT)//pour chiffre les donnee
 };
