@@ -19,5 +19,5 @@ module.exports.jwt_verify = async function (token) {
   });
 };
 module.exports.jwt_generator = function ({ id, role }) {
-  return jwt_auth.sign({ id, role }, process.env.SALT_JWT); //pour genere un token de authantification
+  return jwt_auth.sign({ id, role }, process.env.SALT_JWT, { expiresIn: process.env.JWT_VALIDATION_TIME }); //pour genere un token de authantification
 };

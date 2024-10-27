@@ -1,4 +1,4 @@
-const crypto = require("crypto");// Function to hash the password
+const crypto = require("crypto"); // Function to hash the password
 const HashPass = (pass) => {
   return crypto
     .createHash("sha512")

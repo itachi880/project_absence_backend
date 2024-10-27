@@ -17,5 +17,10 @@ module.exports = model(
       role: { type: String, enum: ["student", "GS", "FR"], required: true, default: "student" },
     },
     { timestamps: true }
-  )
+  ).set("toJSON", {
+    transform: (doc, ret) => {
+      delete ret.password; // Remove passowrd whene use res.json(user)
+      return ret;
+    },
+  })
 );

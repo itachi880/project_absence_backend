@@ -12,7 +12,8 @@ router.post("/add", async (req, res) => {
   if (!first_name || !last_name || !cin || !login || !password) return res.status(400).json({ msg: "data incompleate", data: { first_name, last_name, cin, login, password } });
   //if all data is good :)
   try {
-    res.json(await new User({ first_name, last_name, cin, login, password: HashPass(password), group: group_ID }).save());
+    //send the inserted user back to front end
+    res.json((await new User({ first_name, last_name, cin, login, password: HashPass(password), group: group_ID }).save()).toJSON());
   } catch (e) {
     res.status(500).json(e);
   }
