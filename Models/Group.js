@@ -1,7 +1,8 @@
 const { Schema, model } = require("mongoose");
+const { GroupCollection } = require("./modelsName");
 
 module.exports = model(
-  "Group",
+  GroupCollection,
   new Schema(
     {
       name: { type: String, required: true },

@@ -1,7 +1,8 @@
 const { Schema, model } = require("mongoose");
+const { FormateurGroupCollection } = require("./modelsName");
 
 module.exports = model(
-  "FormateurGroup",
+  FormateurGroupCollection,
   new Schema(
     {
       formateur: { type: Schema.Types.ObjectId, ref: "User", required: true },

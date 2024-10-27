@@ -1,7 +1,8 @@
 const { Schema, model } = require("mongoose");
+const { AbsenceCollection } = require("./modelsName");
 
 module.exports = model(
-  "Absence",
+  AbsenceCollection,
   new Schema(
     {
       student_id: { type: Schema.Types.ObjectId, ref: "User", required: true },
