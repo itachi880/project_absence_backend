@@ -6,6 +6,7 @@ module.exports = model(
   new Schema(
     {
       first_name: { type: String, required: true },
+      profile: { type: String, default: null },
       last_name: { type: String, required: true },
       login: { type: String, required: true, unique: true },
       password: { type: String, required: true }, //hashed version
