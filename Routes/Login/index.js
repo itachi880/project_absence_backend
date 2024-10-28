@@ -5,7 +5,7 @@ const express = require("express");
 const router = express.Router();
 
 // all requests start from '/login' exp for / its /login/
-router.post("/", async (req, res) => {
+router.post("/email", async (req, res) => {
   const { password, login } = req.body;
   try {
     if (!login || !password) return res.status(400).end("incompleate request");
