@@ -5,7 +5,7 @@ const express = require("express");
 
 const cors = require("cors");
 
-const loginRoute = require("./Routes/Login");
+const loginRoute = require("./Routes/Login/index");
 
 const studentRoute = require("./Routes/Students");
 
