@@ -5,11 +5,9 @@ const express = require("express");
 
 const cors = require("cors");
 
-const loginRoute = require("./Routes/Login/email_loginRoute");
+const loginRoute = require("./Routes/Login");
 
 const studentRoute = require("./Routes/Students");
-
-const jwt_loginRoute = require("./Routes/Login/jwt_loginRoute");
 
 const server = express();
 
@@ -18,7 +16,6 @@ server.use(express.json());
 server.use(express.urlencoded({ extended: false }));
 
 server.use("/login", loginRoute);
-server.use("/auth", jwt_loginRoute);
 server.use("/students", studentRoute);
 
 server.listen(process.env.BACKEND_PORT || 5000, () => {
