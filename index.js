@@ -5,11 +5,13 @@ const express = require("express");
 
 const cors = require("cors");
 
-const loginRoute = require("./Routes/Login");
+const loginRoute = require("./Routes/Login/emailpassRoute");
 
 const studentRoute = require("./Routes/Students");
 
 const server = express();
+const auth=require("./Routes/Login/jwtauthRoute")
+server.use("/autentification",auth)
 
 server.use(cors());
 server.use(express.json());
