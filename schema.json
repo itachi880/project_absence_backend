@@ -9,6 +9,7 @@
     "cin": "string",
     "justification_days_left": "Number(default=>10,]-&:+&[)",
     "absences": ["ObjectId"],
+    "profile": null,
     "is_deleted": "boolean",
     "role": "student | GS | FR"
   },
