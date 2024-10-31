@@ -8,7 +8,7 @@ const router = express.Router();
 router.post("/email", async (req, res) => {
   const { password, login } = req.body;
   try {
-    if (!login || !password) return res.status(400).end("incompleate request");
+    if (!login || !password) return res.status(400).json({ message: "incompleate request" });
     let user = await User.findOne({ login: login, password: HashPass(password), is_deleted: false });
     if (!user) return res.status(404).json({ message: "user not found " });
     res.json({
@@ -30,7 +30,7 @@ router.post("/token", async (req, res) => {
   try {
     const userData = await User.findById(data.id);
     if (!userData) return res.status(404).json({ message: "id incorrect" });
-    res.status(200).json({ message: "Authentification réussie", data: userData.toJSON() });
+    res.json({ data: userData.toJSON() });
   } catch (e) {
     res.status(500).json({ message: "error in server check logs" });
   }
