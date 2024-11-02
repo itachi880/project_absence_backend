@@ -17,7 +17,7 @@ router.post("/email", async (req, res) => {
     });
   } catch (e) {
     console.log(e);
-    res.status(500).json(e);
+    res.status(500).json({ message: "error in server please retry later" });
   }
 });
 router.post("/token", async (req, res) => {

@@ -1,11 +1,10 @@
 const mongoose = require("mongoose");
 
-const connectDB = async (timesOfTrying = 0) => {
+const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGODB_URL_TEST, {
       dbName: process.env.DB_NAME,
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
+      maxIdleTimeMS: 2000,
     });
     console.log("Connected to MongoDB");
   } catch (error) {

@@ -9,6 +9,7 @@ const cors = require("cors");
 const loginRoute = require("./Routes/Login/index");
 
 const studentRoute = require("./Routes/Students");
+const groupsRoute = require("./Routes/Groups");
 
 const server = express();
 
@@ -18,6 +19,7 @@ server.use(express.urlencoded({ extended: false }));
 
 server.use("/login", loginRoute);
 server.use("/students", studentRoute);
+server.use("/groups", groupsRoute);
 
 server.listen(process.env.BACKEND_PORT || 5000, () => {
   console.log("server running");
