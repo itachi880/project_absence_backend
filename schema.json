@@ -54,5 +54,9 @@
     "id_group": "id_group",
     "sessions": [1, 2, 3, 4],
     "date": "date(yyyy-mm-dd)"
+  },
+  "graph_data": {
+    "_id": " ObjectId",
+    "ID_group": "ObjectId"
   }
 }

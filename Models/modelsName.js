@@ -4,7 +4,7 @@ module.exports = {
   CertificationCollection: "Certification",
   GroupCollection: "Group",
   FormateurGroupCollection: "FormateurGroup",
-  DonnesCollection:"analyseFinSemaine"
+  DonnesCollection: "WeeklyAnalysis",
 };
 // const User = model('User', userSchema);
 // const Absence = model('Absence', absenceSchema);
