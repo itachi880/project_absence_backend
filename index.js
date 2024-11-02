@@ -1,7 +1,7 @@
 require("dotenv").config();
 require("./DataBase")(); // connect to db
 
-console.log("the .env is " + (process.env.BACKEND_PORT ? " good " : " not loaded"));
+console.log("################the .env is " + (process.env.BACKEND_PORT ? " good " : " not loaded") + "####################");
 const express = require("express");
 const path = require("path");
 const cors = require("cors");
