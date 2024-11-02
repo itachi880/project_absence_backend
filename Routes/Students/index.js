@@ -5,6 +5,7 @@ const { HashPass } = require("../../utils/hashPass");
 const { jwt_verify } = require("../../utils/jwt_auth");
 const roles = require("../../utils/roles");
 const fs = require("fs");
+const { image_profiles_folder } = require("../../utils/foldersName");
 const router = require("express").Router();
 // inscription from idara o l7irassa
 router.post("/add", async (req, res) => {
@@ -33,19 +34,26 @@ router.post("/add", async (req, res) => {
     "group": "ID_group",
     "cin": "string",
     "justification_days_left": "Number(default=>10,]-&:+&[)",
-    "profile": null,
     "is_deleted": "boolean",
     "role": "student | GS | FR"
   }*/
 router.post("/modify", file_uploader.single("profile_pic"), async (req, res) => {
-  const { student_id, token, updated_data } = req.body;
-  if (!student_id || !token || Object.keys(updated_data).length == 0) return res.status(400).json({ message: "data is messing" });
+  let { student_id, token, updated_data } = req.body;
+  if (!student_id || !token) return res.status(400).json({ message: "data is messing" });
+  try {
+    updated_data = JSON.parse(updated_data);
+  } catch (parseError) {
+    console.error("JSON parse error:", parseError);
+    return res.status(400).json({ message: "Invalid JSON format in updated_data" });
+  }
   const [jwt_error, data] = await jwt_verify(token);
   if (jwt_error) return res.status(400).json({ message: "token error" });
-  if (data.role !== roles.general_supervisor || data.id !== student_id) return res.status(401).json({ message: "you dont have access to this action" });
+  if (data.role !== roles.general_supervisor && data.id !== student_id) return res.status(401).json({ message: "you dont have access to this action" });
   if (req.file) {
-    const filename = student_id + req.file.filename;
-    fs.writeFile(path.join(__dirname, "profile_image", filename), req.file.buffer, {}, () => {});
+    const filename = student_id + req.file.originalname;
+    fs.writeFile(path.join(__dirname, "..", "..", image_profiles_folder, filename), req.file.buffer, {}, (err) => {
+      console.log(err);
+    });
     updated_data.profile = filename;
   }
   try {
