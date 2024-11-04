@@ -7,7 +7,7 @@ module.exports = model(
     {
       name: { type: String, required: true },
       is_deleted: { type: Boolean, default: false },
-      study_year: { type: Number, default: new Date().getFullYear() },
+      study_year: { type: Number, default: new Date().getFullYear},
     },
     { timestamps: true }
   )

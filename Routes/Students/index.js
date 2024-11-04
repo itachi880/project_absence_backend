@@ -24,19 +24,7 @@ router.post("/add", async (req, res) => {
     console.log(e);
     res.status(500).json({ message: "check errors in logs" });
   }
-}); /*
-    data to sent as updated sholde look like this (you dont have to send all that just the modified parts)
-  {
-    "first_name": "John",
-    "last_name": "Doe",
-    "login": "string(email)",
-    "password": "string(hashed)",
-    "group": "ID_group",
-    "cin": "string",
-    "justification_days_left": "Number(default=>10,]-&:+&[)",
-    "is_deleted": "boolean",
-    "role": "student | GS | FR"
-  }*/
+});
 router.post("/modify", file_uploader.single("profile_pic"), async (req, res) => {
   let { student_id, token, updated_data } = req.body;
   if (!student_id || !token) return res.status(400).json({ message: "data is messing" });

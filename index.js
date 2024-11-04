@@ -17,7 +17,6 @@ const server = express();
 server.use(cors());
 server.use(express.json());
 server.use(express.urlencoded({ extended: false }));
-
 server.use("/login", loginRoute);
 server.use("/students", studentRoute);
 server.use("/groups", groupsRoute);
