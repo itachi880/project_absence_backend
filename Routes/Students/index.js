@@ -8,6 +8,39 @@ const fs = require("fs");
 const { image_profiles_folder } = require("../../utils/foldersName");
 const router = require("express").Router();
 // inscription from idara o l7irassa
+router.get("/getByID", async (req, res) => {
+  const { token = false, id = false } = req.query; // can be sent as a part of body data or a hedear with prefix barer
+  if (!token || !id) return res.status(400).json({ message: "data incomplet" });
+  const [error, data] = await jwt_verify(token);
+  // Si le token est invalide ou expiré
+  if (error) return res.status(401).json({ message: "Token invalide ou expiré" });
+  if (data.id !== id && data.role != roles.general_supervisor) return res.status(401).json({ message: "you dont have access to this action" });
+  // Si le token est valide, renvoie les données extraites
+  try {
+    const userData = await User.findById(id);
+    if (!userData) return res.status(404).json({ message: "id incorrect" });
+    res.json({ data: userData.toJSON() });
+  } catch (e) {
+    res.status(500).json({ message: "error in server check logs" });
+  }
+});
+router.get("/getByGroupID", async (req, res) => {
+  const { token = false, id = false } = req.query; // can be sent as a part of body data or a hedear with prefix barer
+  if (!token || !id) return res.status(400).json({ message: "data incomplet" });
+  const [error, data] = await jwt_verify(token);
+  // Si le token est invalide ou expiré
+  if (error) return res.status(401).json({ message: "Token invalide ou expiré" });
+  if (data.role != roles.general_supervisor) return res.status(401).json({ message: "you dont have access to this action" });
+  // Si le token est valide, renvoie les données extraites
+  try {
+    const userData = await User.find({ group: id });
+    if (!userData) return res.status(404).json({ message: "id incorrect" });
+    res.json({ data: userData });
+  } catch (e) {
+    console.log(e);
+    res.status(500).json({ message: "error in server check logs" });
+  }
+});
 router.post("/add", async (req, res) => {
   const { token = false, first_name = false, last_name = false, cin = false, login = false, password = false, group = null } = req.body;
 
