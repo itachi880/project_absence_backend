@@ -7,7 +7,7 @@ const path = require("path");
 const cors = require("cors");
 
 const loginRoute = require("./Routes/Login/index");
-
+const absenceRoute = require("./Routes/Absence/index");
 const studentRoute = require("./Routes/Students");
 const groupsRoute = require("./Routes/Groups");
 const { image_profiles_folder } = require("./utils/foldersName");
@@ -19,6 +19,7 @@ server.use(express.json());
 server.use(express.urlencoded({ extended: false }));
 server.use("/login", loginRoute);
 server.use("/students", studentRoute);
+server.use("/absence", absenceRoute);
 server.use("/groups", groupsRoute);
 server.get("/profile/:image_name", (req, res) => {
   res.sendFile(path.join(__dirname, image_profiles_folder, req.params.image_name.replaceAll("..", "")), (err) => {

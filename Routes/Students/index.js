@@ -41,12 +41,12 @@ router.get("/getByGroupID", async (req, res) => {
     res.status(500).json({ message: "error in server check logs" });
   }
 });
+
 router.post("/add", async (req, res) => {
   const { token = false, first_name = false, last_name = false, cin = false, login = false, password = false, group = null } = req.body;
 
   const [auth_error, auth_data] = await jwt_verify(token);
 
-  console.log(auth_error);
   if (auth_error) return res.status(401).json({ message: "token pas valide" });
   if (auth_data.role != roles.general_supervisor) return res.status(401).json({ message: "you dont have access only admins and general supervisor are welcome to perform this actions" });
   if (!first_name || !last_name || !cin || !login || !password) return res.status(400).json({ message: "data incompleate", data: { first_name, last_name, cin, login, password } });
@@ -84,7 +84,6 @@ router.put("/modify", file_uploader.single("profile_pic"), async (req, res) => {
     return res.status(500).json({ message: "data base error" });
   }
 });
-
 router.delete("/delete", async (req, res) => {
   const { token = false, student_id = false } = req.body;
   if (!token || !student_id) return res.status(400).json({ message: "incoreccte les donnes que vous avez envoyer" });
