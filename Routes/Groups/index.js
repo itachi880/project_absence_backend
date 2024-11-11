@@ -72,4 +72,16 @@ router.get("/getAll", async (req, res) => {
     console.log(e);
   }
 });
+router.get("/getByID", async (req, res) => {
+  const { token = false, id = false } = req.query;
+  if (!token || !id) res.status(400).end("data incompleate");
+  const [error_auth, data_auth] = await jwt_verify(token);
+  if (error_auth) res.status(401).end("you dont have access");
+  if (data_auth.role !== roles.general_supervisor) res.status(401).end("you dont have access");
+  try {
+    res.json(await Group.findById(id));
+  } catch (e) {
+    res.status(500).end("error in back end");
+  }
+});
 module.exports = router;
