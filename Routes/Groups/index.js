@@ -6,7 +6,7 @@ const roles = require("../../utils/roles");
 const router = require("express").Router();
 
 router.post("/add", async (req, res) => {
-  const { name=undefined, study_year = undefined, token = undefined } = req.body;
+  const { name = undefined, study_year = undefined, token = undefined } = req.body;
   if (!name) return res.status(400).json({ message: "data is messing " });
   if (!token) return res.status(401).json({ message: "token error" });
   const [jwt_error, data] = await jwt_verify(token);
@@ -48,25 +48,25 @@ router.put("/update", async (req, res) => {
 });
 router.get("/getByYear", async (req, res) => {
   const { token = false, study_year = false } = req.body;
-  if (!token || !study_year ) return res.status(400).json({ message: "incoreccte les donnes que vous avez envoyer" });
+  if (!token || !study_year) return res.status(400).json({ message: "incoreccte les donnes que vous avez envoyer" });
   const [auth_error, auth_data] = await jwt_verify(token);
   if (auth_error) return res.status(401).json({ message: "token pas valide" });
   if (auth_data.role != roles.general_supervisor) return res.status(401).json({ message: "you dont have access only admins and general supervisor are welcome to perform this actions" });
   try {
-    res.json( await Group.find({ is_deleted:false,study_year: study_year }))
+    res.json(await Group.find({ is_deleted: false, study_year: study_year }));
   } catch (e) {
     console.log(e);
     return res.status(500).json({ message: "db error" });
   }
 });
 router.get("/getAll", async (req, res) => {
-  const { token = false } = req.body;
-  if (!token ) return res.status(400).json({ message: "incoreccte les donnes que vous avez envoyer" });
+  const { token = false, archived = false } = req.query;
+  if (!token) return res.status(400).json({ message: "incoreccte les donnes que vous avez envoyer" });
   const [auth_error, auth_data] = await jwt_verify(token);
   if (auth_error) return res.status(401).json({ message: "token pas valide" });
   if (auth_data.role != roles.general_supervisor) return res.status(401).json({ message: "you dont have access only admins and general supervisor are welcome to perform this actions" });
   try {
-    res.json( await Group.find({ is_deleted:false}))
+    res.json(await Group.find(!archived ? { is_deleted: false } : {}));
   } catch (e) {
     console.log(e);
     return res.status(500).json({ message: "db error" });
