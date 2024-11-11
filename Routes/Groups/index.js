@@ -11,7 +11,7 @@ router.post("/add", async (req, res) => {
   if (!token) return res.status(401).json({ message: "token error" });
   const [jwt_error, data] = await jwt_verify(token);
   if (jwt_error) return res.status(401).json({ message: "token wrong" });
-  if (data.role !== roles.general_supervisor) return res.status(401).json({ message: "you dont have access to this action" });
+  if (data.role != roles.general_supervisor) return res.status(401).json({ message: "you dont have access to this action" });
   try {
     return res.json(await new Group({ name, study_year: study_year }).save());
   } catch (e) {
