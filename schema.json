@@ -11,7 +11,8 @@
     "absences": ["ObjectId"],
     "profile": null,
     "is_deleted": "boolean",
-    "role": "student | GS | FR"
+    "role": "student | GS | FR",
+    "displine_points": "Number(default=>10,]0,20])"
   },
   "absence": {
     "_id": "ObjectId",

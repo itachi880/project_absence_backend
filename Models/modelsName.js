@@ -4,5 +4,6 @@ module.exports = {
   CertificationCollection: "Certification",
   GroupCollection: "Group",
   FormateurGroupCollection: "FormateurGroup",
-  DonnesCollection: "WeeklyAnalysis",
+  DonnesGroupsCollection: "GroupsWeeklyAnalysis",
+  DonnesUsersCollection: "UsersWeeklyAnalysis",
 };

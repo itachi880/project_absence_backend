@@ -16,6 +16,7 @@ module.exports = model(
       absences: [{ type: Schema.Types.ObjectId, ref: "Absence" }],
       is_deleted: { type: Boolean, default: false },
       role: { type: String, enum: ["student", "GS", "FR"], required: true, default: "student" },
+      displine_points: { type: Number, default: 20 },
     },
     { timestamps: true }
   ).set("toJSON", {
