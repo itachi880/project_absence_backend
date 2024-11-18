@@ -4,7 +4,7 @@ const { jwt_verify } = require("../../utils/jwt_auth");
 const roles = require("../../utils/roles");
 
 const router = require("express").Router();
-
+const PageLimitForDocs = 2;
 router.post("/add", async (req, res) => {
   const { name = undefined, study_year = undefined, token = undefined } = req.body;
   if (!name) return res.status(400).end("data is messing");
@@ -60,13 +60,18 @@ router.get("/getByYear", async (req, res) => {
   }
 });
 router.get("/getAll", async (req, res) => {
-  const { token = false, archived = false } = req.query;
+  const { token = false, archived = false, pageNumber = 0 } = req.query;
   if (!token) return res.status(400).end("incoreccte les donnes que vous avez envoyer");
   const [auth_error, auth_data] = await jwt_verify(token);
   if (auth_error) return res.status(401).end("token pas valide");
   if (auth_data.role != roles.general_supervisor) return res.status(401).end("you dont have access only admins and general supervisor are welcome to perform this actions");
   try {
-    res.json(await Group.find(!archived ? { is_deleted: false } : {}));
+    res.json({
+      groups: await Group.find(!archived ? { is_deleted: false } : {})
+        .skip(pageNumber * PageLimitForDocs)
+        .limit(PageLimitForDocs),
+      current: pageNumber,
+    });
   } catch (e) {
     res.status(500).end("db error");
     console.log(e);
