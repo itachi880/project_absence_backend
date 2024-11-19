@@ -89,4 +89,25 @@ router.get("/getByID", async (req, res) => {
     res.status(500).end("error in back end");
   }
 });
+router.get('/searchGroups', async(req,res)=>{
+  const { query = false} = req.query;
+  if (!query) {
+    return res.status(400).end("data incompleate" );
+  }
+  try {
+    const results = await Group.find({
+      name: { $regex: query,$options:'i'},
+    });
+
+    if (results.length == 0) {
+      return res.status(404).send("No groups found.");
+    }
+
+    return res.status(200).json(results);
+  }
+  catch (err) {
+    console.error("Error fetching groups:", err);
+  }
+
+})
 module.exports = router;
