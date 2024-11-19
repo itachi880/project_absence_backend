@@ -60,14 +60,14 @@ router.get("/getByYear", async (req, res) => {
   }
 });
 router.get("/getAll", async (req, res) => {
-  const { token = false, archived = false, pageNumber = 0 } = req.query;
+  const { token = false, archived = "false", pageNumber = 0 } = req.query;
   if (!token) return res.status(400).end("incoreccte les donnes que vous avez envoyer");
   const [auth_error, auth_data] = await jwt_verify(token);
   if (auth_error) return res.status(401).end("token pas valide");
   if (auth_data.role != roles.general_supervisor) return res.status(401).end("you dont have access only admins and general supervisor are welcome to perform this actions");
   try {
     res.json({
-      groups: await Group.find(!archived ? { is_deleted: false } : {})
+      groups: await Group.find({ is_deleted: archived[0] == "f" ? false : true })
         .skip(pageNumber * PageLimitForDocs)
         .limit(PageLimitForDocs),
       current: pageNumber,
