@@ -53,7 +53,7 @@ router.post("/add", async (req, res) => {
   if (!first_name || !last_name || !cin || !login || !password) return res.status(400).end("data incompleate");
 
   try {
-    if (!(await Group.findOne({ _id: group, is_deleted: false }))) return res.status(404).end("no group was found");
+    if (role == roles.student) if (!(await Group.findOne({ _id: group, is_deleted: false }))) return res.status(404).end("no group was found");
     res.json((await new User({ first_name, last_name, cin, login, password: HashPass(password), group: group, profile: null, role }).save()).toJSON());
   } catch (e) {
     console.log(e);
