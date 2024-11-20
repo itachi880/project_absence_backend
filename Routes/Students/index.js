@@ -44,7 +44,7 @@ router.get("/getByGroupID", async (req, res) => {
 });
 
 router.post("/add", async (req, res) => {
-  const { token = false, first_name = false, last_name = false, cin = false, login = false, password = false, group = null } = req.body;
+  const { token = false, first_name = false, last_name = false, cin = false, login = false, password = false, group = null, role = roles.student } = req.body;
 
   const [auth_error, auth_data] = await jwt_verify(token);
 
@@ -54,7 +54,7 @@ router.post("/add", async (req, res) => {
 
   try {
     if (!(await Group.findOne({ _id: group, is_deleted: false }))) return res.status(404).end("no group was found");
-    res.json((await new User({ first_name, last_name, cin, login, password: HashPass(password), group: group, profile: null }).save()).toJSON());
+    res.json((await new User({ first_name, last_name, cin, login, password: HashPass(password), group: group, profile: null, role }).save()).toJSON());
   } catch (e) {
     console.log(e);
     res.status(500).end("check errors in logs");
