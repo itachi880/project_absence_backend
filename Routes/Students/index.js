@@ -6,6 +6,7 @@ const { jwt_verify } = require("../../utils/jwt_auth");
 const roles = require("../../utils/roles");
 const fs = require("fs");
 const { image_profiles_folder } = require("../../utils/foldersName");
+const Group = require("../../Models/Group");
 const router = require("express").Router();
 // inscription from idara o l7irassa
 router.get("/getByID", async (req, res) => {
@@ -52,6 +53,7 @@ router.post("/add", async (req, res) => {
   if (!first_name || !last_name || !cin || !login || !password) return res.status(400).end("data incompleate");
 
   try {
+    if (!(await Group.findOne({ _id: group, is_deleted: false }))) return res.status(404).end("no group was found");
     res.json((await new User({ first_name, last_name, cin, login, password: HashPass(password), group: group, profile: null }).save()).toJSON());
   } catch (e) {
     console.log(e);
