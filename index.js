@@ -8,7 +8,7 @@ const cors = require("cors");
 
 const loginRoute = require("./Routes/Login/index");
 const absenceRoute = require("./Routes/Absence/index");
-const studentRoute = require("./Routes/Students");
+const usersRoute = require("./Routes/Users");
 const groupsRoute = require("./Routes/Groups");
 const CertificationsRoute = require("./Routes/Certifications");
 const { image_profiles_folder } = require("./utils/foldersName");
@@ -19,7 +19,7 @@ server.use(cors());
 server.use(express.json());
 server.use(express.urlencoded({ extended: false }));
 server.use("/login", loginRoute);
-server.use("/students", studentRoute);
+server.use("/users", usersRoute);
 server.use("/absence", absenceRoute);
 server.use("/groups", groupsRoute);
 server.use("/certifications", CertificationsRoute);
