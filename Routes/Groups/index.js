@@ -13,7 +13,7 @@ router.post("/add", async (req, res) => {
   if (jwt_error) return res.status(401).end("token wrong");
   if (data.role != roles.general_supervisor) return res.status(401).end("you dont have access to this action");
   try {
-    return res.json(await new Group({ name, study_year: study_year }).save());
+    return res.json(await new Group({ name: name?.toUpperCase(), study_year: +study_year }).save());
   } catch (e) {
     return res.status(500).end("insertion error check logs");
   }
@@ -89,14 +89,14 @@ router.get("/getByID", async (req, res) => {
     res.status(500).end("error in back end");
   }
 });
-router.get('/searchGroups', async(req,res)=>{
-  const { query = false} = req.query;
+router.get("/searchGroups", async (req, res) => {
+  const { query = false } = req.query;
   if (!query) {
-    return res.status(400).end("data incompleate" );
+    return res.status(400).end("data incompleate");
   }
   try {
     const results = await Group.find({
-      name: { $regex: query,$options:'i'},
+      name: { $regex: query, $options: "i" },
     });
 
     if (results.length == 0) {
@@ -104,10 +104,8 @@ router.get('/searchGroups', async(req,res)=>{
     }
 
     return res.status(200).json(results);
-  }
-  catch (err) {
+  } catch (err) {
     console.error("Error fetching groups:", err);
   }
-
-})
+});
 module.exports = router;

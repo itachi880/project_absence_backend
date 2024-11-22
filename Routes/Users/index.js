@@ -51,10 +51,9 @@ router.post("/add", async (req, res) => {
   if (auth_error) return res.status(401).end("token pas valide");
   if (auth_data.role != roles.general_supervisor) return res.status(401).end("you dont have access only admins and general supervisor are welcome to perform this actions");
   if (!first_name || !last_name || !cin || !login || !password) return res.status(400).end("data incompleate");
-
   try {
     if (role == roles.student) if (!(await Group.findOne({ _id: group, is_deleted: false }))) return res.status(404).end("no group was found");
-    res.json((await new User({ first_name, last_name, cin, login, password: HashPass(password), group: group, profile: null, role }).save()).toJSON());
+    res.json((await new User({ first_name, last_name, cin, login, password: HashPass(password), group: role == roles.student ? group : null, profile: null, role }).save()).toJSON());
   } catch (e) {
     console.log(e);
     res.status(500).end("check errors in logs");
