@@ -31,11 +31,12 @@ router.get("/getByGroupID", async (req, res) => {
   const [error, data] = await jwt_verify(token);
   // Si le token est invalide ou expiré
   if (error) return res.status(401).end("Token invalide ou expiré");
-  if (data.role != roles.general_supervisor) return res.status(401).end("you dont have access to this action");
   // Si le token est valide, renvoie les données extraites
   try {
+    if (data.role != roles.general_supervisor && data.role != roles.Formateur) return res.json({ data: [await User.findOne({ _id: data.id }, { displine_points: 0 })] });
+
     const userData = await User.find({ group: id });
-    if (!userData) return res.status(404).end("id incorrect");
+    if (userData.length == 0) return res.status(404).end("id incorrect");
     res.json({ data: userData });
   } catch (e) {
     console.log(e);

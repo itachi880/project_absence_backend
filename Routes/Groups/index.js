@@ -2,7 +2,7 @@ const Group = require("../../Models/Group");
 const User = require("../../Models/User");
 const { jwt_verify } = require("../../utils/jwt_auth");
 const roles = require("../../utils/roles");
-
+const { Types } = require("mongoose");
 const router = require("express").Router();
 const PageLimitForDocs = 2;
 router.post("/add", async (req, res) => {
@@ -79,21 +79,46 @@ router.get("/getAll", async (req, res) => {
 });
 router.get("/getByID", async (req, res) => {
   const { token = false, id = false } = req.query;
-  if (!token || !id) res.status(400).end("data incompleate");
+  if (!token || !id) return res.status(400).end("data incompleate");
   const [error_auth, data_auth] = await jwt_verify(token);
-  if (error_auth) res.status(401).end("you dont have access");
-  if (data_auth.role !== roles.general_supervisor) res.status(401).end("you dont have access");
+  if (error_auth) return res.status(401).end("you dont have access");
   try {
-    res.json(await Group.findById(id));
+    if (data_auth.role != roles.general_supervisor && data_auth.role != roles.Formateur) {
+      const results = await Group.aggregate([
+        {
+          $lookup: {
+            from: "users", // Assuming users collection
+            localField: "_id", // Group ID
+            foreignField: "group", // Assuming users have a `group` field linking to group
+            as: "users", // Join users into the 'users' field
+          },
+        },
+        {
+          $match: {
+            _id: new Types.ObjectId(id), // Match the group by ID
+
+            "users._id": new Types.ObjectId(data_auth.id), // Match userId with logged-in user
+          },
+        },
+        {
+          $project: {
+            users: 0, // Exclude the 'users' field from the final result
+          },
+        },
+      ]);
+      if (results.length == 0) return res.status(401).end("this isn't your group :)");
+      return res.json(results[0]);
+    }
+    return res.json(await Group.findById(id));
   } catch (e) {
-    res.status(500).end("error in back end");
+    console.log(e);
+    return res.status(500).end("error in back end");
   }
 });
 router.get("/searchGroups", async (req, res) => {
   const { query = false } = req.query;
-  if (!query) {
-    return res.status(400).end("data incompleate");
-  }
+  if (!query) return res.status(400).end("data incompleate");
+
   try {
     const results = await Group.find({
       name: { $regex: query, $options: "i" },
@@ -105,7 +130,8 @@ router.get("/searchGroups", async (req, res) => {
 
     return res.status(200).json(results);
   } catch (err) {
-    console.error("Error fetching groups:", err);
+    res.status(500).end("error");
+    return console.error("Error fetching groups:", err);
   }
 });
 module.exports = router;
