@@ -134,4 +134,17 @@ router.get("/searchGroups", async (req, res) => {
     return console.error("Error fetching groups:", err);
   }
 });
+router.put("/undo/delete", async (req, res) => {
+  const { token = false, group_id = false } = req.body;
+  if (!token || !group_id) return res.status(400).end("data incompleated");
+  const [auth_error, auth_data] = await jwt_verify(token);
+  if (auth_error) return res.status(401).end("token error");
+  if (auth_data.role != roles.general_supervisor) return res.status(401).end("dont have access");
+  try {
+    res.json(await Group.updateOne({ _id: group_id }, { is_deleted: false }));
+    await User.updateMany({ group: group_id }, { is_deleted: false });
+  } catch (e) {
+    return res.status(500).end("server error");
+  }
+});
 module.exports = router;

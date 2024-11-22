@@ -43,7 +43,6 @@ router.get("/getByGroupID", async (req, res) => {
     res.status(500).end("error in server check logs");
   }
 });
-
 router.post("/add", async (req, res) => {
   const { token = false, first_name = false, last_name = false, cin = false, login = false, password = false, group = null, role = roles.student } = req.body;
 
@@ -103,4 +102,5 @@ router.delete("/delete", async (req, res) => {
     return res.status(500).end("db error");
   }
 });
+
 module.exports = router;
