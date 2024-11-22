@@ -9,7 +9,7 @@ router.post("/email", async (req, res) => {
   const { password, login } = req.body;
   try {
     if (!login || !password) return res.status(400).end("incompleate request");
-    let user = await User.findOne({ login: login, password: HashPass(password), is_deleted: false });
+    let user = await User.findOne({ login: login, password: HashPass(password), is_deleted: false }, { displine_points: 0 });
     if (!user) return res.status(404).end("user not found ");
     res.json({
       token: jwt_generator({ id: user._id, role: user.role }),
@@ -28,7 +28,7 @@ router.post("/token", async (req, res) => {
   if (error) return res.status(401).end("Token invalide ou expiré");
   // Si le token est valide, renvoie les données extraites
   try {
-    const userData = await User.findById(data.id);
+    const userData = await User.findById(data.id, { displine_points: 0 });
     if (!userData) return res.status(404).end("id incorrect");
     res.json({ data: userData.toJSON() });
   } catch (e) {

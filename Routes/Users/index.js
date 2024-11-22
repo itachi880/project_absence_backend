@@ -18,7 +18,7 @@ router.get("/getByID", async (req, res) => {
   if (data.id !== id && data.role != roles.general_supervisor) return res.status(401).end("you dont have access to this action");
   // Si le token est valide, renvoie les données extraites
   try {
-    const userData = await User.findById(id);
+    const userData = await User.findById(id, { displine_points: id != data.id });
     if (!userData) return res.status(404).end("id incorrect");
     res.json({ data: userData.toJSON() });
   } catch (e) {

@@ -1,5 +1,6 @@
 const { Schema, model } = require("mongoose");
 const { UserCollection } = require("./modelsName");
+const roles = require("../utils/roles");
 
 module.exports = model(
   UserCollection,
