@@ -122,6 +122,7 @@ router.get("/searchGroups", async (req, res) => {
   try {
     const results = await Group.find({
       name: { $regex: query, $options: "i" },
+      is_deleted: false,
     });
 
     if (results.length == 0) {
