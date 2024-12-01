@@ -1,8 +1,9 @@
+const FormateurGroup = require("../../Models/FormateurGroup");
 const Group = require("../../Models/Group");
 const User = require("../../Models/User");
 const { jwt_verify } = require("../../utils/jwt_auth");
 const roles = require("../../utils/roles");
-const { Types } = require("mongoose");
+const { Types, default: mongoose } = require("mongoose");
 const router = require("express").Router();
 const PageLimitForDocs = 2;
 router.post("/add", async (req, res) => {
@@ -64,8 +65,43 @@ router.get("/getAll", async (req, res) => {
   if (!token) return res.status(400).end("incoreccte les donnes que vous avez envoyer");
   const [auth_error, auth_data] = await jwt_verify(token);
   if (auth_error) return res.status(401).end("token pas valide");
-  if (auth_data.role != roles.general_supervisor) return res.status(401).end("you dont have access only admins and general supervisor are welcome to perform this actions");
+  if (auth_data.role == roles.student) return res.status(401).end("you dont have access only admins and general supervisor are welcome to perform this actions");
   try {
+    if (auth_data.role == roles.Formateur)
+      return res.json({
+        groups: await FormateurGroup.aggregate([
+          {
+            $match: {
+              formateur: new mongoose.Types.ObjectId(auth_data.id),
+              date: new Date().toISOString().split("T")[0] + "T00:00:00",
+            },
+          },
+          {
+            $lookup: {
+              from: "groups", // Collection name for Group (lowercase + pluralized)
+              localField: "id_group",
+              foreignField: "_id",
+              as: "groupDetails",
+            },
+          },
+          {
+            $unwind: "$groupDetails", // Flatten groupDetails array
+          },
+          {
+            $match: { "groupDetails.is_deleted": false }, // Exclude deleted groups
+          },
+          {
+            $project: {
+              _id: 0, // Exclude FormateurGroup _id
+              group: "$groupDetails.name",
+              study_year: "$groupDetails.study_year",
+              sessions: 1,
+              date: 1,
+            },
+          },
+        ]),
+      });
+
     res.json({
       groups: await Group.find({ is_deleted: archived[0] == "f" ? false : true })
         .skip(pageNumber * PageLimitForDocs)
