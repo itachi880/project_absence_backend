@@ -31,7 +31,7 @@ router.post('/register', async (req, res) => {
     if (!absenceRecord) return await addAbsence(month,day,sessions) && res.end("done");
 
     const absenceDay = absenceRecord.absences.findIndex(absence => absence.date == day);
-    absenceRecord.absences[absenceDay].sessions = [...new Set(absenceRecord.absences[absenceDay].sessions,sessions)]
+    absenceRecord.absences[absenceDay].sessions = new Set([...absenceRecord.absences[absenceDay].sessions,...sessions])
     absenceRecord.total_absences += sessions.length;
     await absenceRecord.save();
     return res.end("done")
