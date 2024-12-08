@@ -13,3 +13,13 @@ module.exports = model(
     { timestamps: true }
   )
 );
+/**
+ * {
+ *  formateur:"alami",
+ *  id_group:"devfs206",
+ *  sessions:[1,2]
+ *  date:"2024-12-5",
+ * }
+ * Fomateurgroup.find({formateur:alami,id:group:devfs206,date:Date.now()})
+ * Date.now()/108280038 /new Date() "2024-08-05"
+ */
