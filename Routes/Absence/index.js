@@ -1,7 +1,7 @@
 const Absence = require("../../Models/Absence");
-const { jwt_verify } = require("../../utils/jwt_auth");
+const { jwt_verify } = require("../../utils/jwt_auth")
 const roles = require("../../utils/roles");
-const { jwt_verify } = require("../../utils/jwt_auth");
+// const { jwt_verify } = require("../../utils/jwt_auth");
 const { DaysInMonths } = require("../../utils/DaysInMonths");
 const router = require("express").Router();
 router.get("/getByID", async (req, res) => {
@@ -42,7 +42,7 @@ router.post('/register', async (req, res) => {
   }
 });
 async function addAbsence(month,day,sessions=[]){
-  if (!DaysInMonths[month]) DaysInMonths[month] = new Date(month + "-0").getDate();
+   if (!DaysInMonths[ month]) DaysInMonths[ month] = new Date( month + "-0").getDate();
   const absences = Array.from({ length: DaysInMonths[month] }, (_, index) => ({
     date: index + 1,
     sessions: [],
@@ -51,4 +51,27 @@ async function addAbsence(month,day,sessions=[]){
   absences[day - 1].sessions = sessions;
   return await new Absence({ student_id, month, absences,total_absences:sessions.length }).save()
 }
+router.post('/getGroupsFormateur',async (req,res)=>{
+  const { token = false, group_id, day, sessions} = req.body;
+  if (!token, !group_id) return res.status(400).end("incoreccte les donnes que vous avez envoyer")
+  const [auth_error, auth_data] = await jwt_verify(token);
+  if (auth_error) return res.status(401).end("token pas valide");
+  if (auth_data.role != roles.Formateur) return res.status(401).end("you dont have access only admins and general supervisor are welcome to perform this actions");
+  try{
+    const formateurGroups = await FormateurGroupCollection.find({ formateur: auth_data.id }).populate("id_group");
+    if (formateurGroups.length == 0) {
+      return res.status(404).end("Ce formateur n'a aucun groupe associé.");
+    }
+    const results = formateurGroups.map(e => ({
+      groupId: e.id_group,
+      Name: e.formateur,
+      sessions: e.sessions,
+      date: e.date.toISOString().split("T")[0], 
+    }));
+    return res.json(results);
+  }catch (error) {
+    console.error("Erreur lors de la récupération des groupes:", error);
+    return res.status(500).end("Erreur interne du serveur.");
+  }
+})
 module.exports = router;
