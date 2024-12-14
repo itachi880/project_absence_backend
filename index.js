@@ -5,7 +5,7 @@ console.log("################the .env is " + (process.env.BACKEND_PORT ? " good 
 const express = require("express");
 const path = require("path");
 const cors = require("cors");
-
+const formateurRoute=require("./Routes/formateur/index");
 const loginRoute = require("./Routes/Login/index");
 const absenceRoute = require("./Routes/Absence/index");
 const usersRoute = require("./Routes/Users");
@@ -21,6 +21,7 @@ server.use(express.urlencoded({ extended: false }));
 server.use("/login", loginRoute);
 server.use("/users", usersRoute);
 server.use("/absence", absenceRoute);
+server.use("/formateur", formateurRoute);
 server.use("/groups", groupsRoute);
 server.use("/certifications", CertificationsRoute);
 server.get("/profile/:image_name", (req, res) => {
