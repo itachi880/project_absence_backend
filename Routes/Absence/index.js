@@ -52,7 +52,7 @@ async function addAbsence(month,day,sessions=[]){
   return await new Absence({ student_id, month, absences,total_absences:sessions.length }).save()
 }
 router.post('/getGroupsFormateur',async (req,res)=>{
-  const { token = false, group_id, day, sessions} = req.body;
+  const { token = false, group_id,} = req.body;
   if (!token, !group_id) return res.status(400).end("incoreccte les donnes que vous avez envoyer")
   const [auth_error, auth_data] = await jwt_verify(token);
   if (auth_error) return res.status(401).end("token pas valide");
@@ -66,7 +66,7 @@ router.post('/getGroupsFormateur',async (req,res)=>{
       groupId: e.id_group,
       Name: e.formateur,
       sessions: e.sessions,
-      date: e.date.toISOString().split("T")[0], 
+      date: e.date ? e.date.toISOString().split("T")[0]:null
     }));
     return res.json(results);
   }catch (error) {
